@@ -34,6 +34,20 @@ export const RegisterUserProfile = async (data,token) => {
     return response
 }
 
+export const PutUserProfile = async (data,token) => {
+    let token_decoded = jwt_decode(token)
+    const response = await axios({
+        method: 'put',
+        url:base_url+'/auth/user_profile/',
+        headers: {'Authorization':'JWT '+token},
+        data:{
+            service:data.service,
+            user:token_decoded.user_id
+        }
+    })
+    return response
+}
+
 export const getUserService = async (token)=>{
     const response = await axios({
         method: 'get',

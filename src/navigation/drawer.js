@@ -18,12 +18,19 @@ const DrawerNav = ()=> {
         <Drawer.Navigator drawerContent={props => <CustomeDrawer {...props} />}  initialRouteName="Home"       screenOptions={{
             drawerType: dimensions.width >= 768 ? 'permanent' : 'front',
         }} >
-            <Drawer.Screen name="Home" component={Home} />
+            <Drawer.Screen name="Home" component={Home} options={{headerShown: false}}/>
             <Drawer.Screen name="Add an Event" component={AddEvent} options={{headerShown: false}}/>
             <Drawer.Screen name="Handlers Manager" component={AddHandler} options={{headerShown: false}}/>
-            <Drawer.Screen name="EventDetails" component={EventDetails} options={{headerShown: false}} />
+            <Drawer.Screen name="EventDetails" component={EventDetails} options={{
+                headerShown: false,
+                drawerLabel:() => null,
+                title:null,
+                drawerIcon:null,
+                drawerItemStyle:{height:0}
+                }} />
         </Drawer.Navigator>
     )
+
 }
 
 export default DrawerNav

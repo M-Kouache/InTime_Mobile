@@ -1,4 +1,4 @@
-import { Box, Heading, Text, HStack, Spinner, Button, Badge} from 'native-base'
+import { Box, Divider, Heading, Text, HStack, Spinner, Button, Badge} from 'native-base'
 import { Alert } from 'react-native'
 import { removeEvent } from '../utils/eventManager'
 import { useContext, useState } from 'react'
@@ -8,13 +8,13 @@ import { UserContext } from '../utils/contextProvider'
 const EventDetails = ({route,navigation})=> {
    
     const {data} = route.params
-    const {user,forceToRun, setForceToRun} = useContext(UserContext)
+    const {user,forceToRun,userData, setForceToRun} = useContext(UserContext)
     const [processRequest,setProcessRequest] = useState(false)
 
 
     const removeEventManager = async ()=> {
         setProcessRequest(true)
-        const response = await removeEvent(data.body.id,user.access)
+        const response = await removeEvent(data.id,user.access)
         if (response.status === 200){
             setProcessRequest(false)
             Alert.alert('Event Manager','seccessfuly removed event.')
@@ -48,25 +48,36 @@ const EventDetails = ({route,navigation})=> {
             }
             <HStack w="100%" justifyContent="space-between" >
                 <Button onPress={() => navigation.goBack()}borderRadius={25} marginBottom={2} w={90}>Go back</Button>
-                <Button onPress={removeEventManager} borderRadius={25} marginBottom={2} w={90} bg="red.400" >Delete</Button>
+                { userData.info.id === data.user.id ?
+                    <Button onPress={removeEventManager} borderRadius={25} marginBottom={2} w={90} bg="red.400" >Delete</Button>
+                    : null
+                }
             </HStack>
-            <Heading py={2} marginTop={2} fontSize="xl">
-                {data.body.title} 
+            <Heading py={2} marginTop={2} fontSize="2xl">
+                {data.title} 
             </Heading>
             <HStack w="100%" justifyContent="space-between">
-                <Text ml={4} fontSize="md" color="gray.500" >Mr {data.user_info.first_name+' '+data.user_info.last_name}</Text>
-                <Badge borderRadius={25} colorScheme="seccess" >{data.pub_info.libelle}</Badge>
+                <Text ml={4} fontSize="md" color="gray.500" >Mr {data.user.first_name+' '+data.user.last_name}</Text>
+                <Badge borderRadius={25} colorScheme="seccess" >{data.department.libelle}</Badge>
             </HStack>
             <Text fontSize="md" marginTop={3} pt="3" mb={2}>
                 {data.body.description}
             </Text>
-            <Text color="gray.500" fontSize="md" pt="3" mb={2}>
-               location of the event : {data.body.location}
+            <Text pt="3" mb={2}>
+                <Text fontSize="xl" fontWeight="bold" mb="4" >Location : </Text>
+                <Text fontSize="lg"  mb="4" >{data.body.location}</Text>
             </Text>
-            <Text color="gray.500" fontSize="md" pt="3" mb={2}>
-               date : {data.body.date_start}
-            </Text>
-        </Box> 
+            <Text fontSize="xl" fontWeight="bold" mb="4" >Date :</Text>
+            <HStack style={{display: 'flex', alignItems:'center', justifyContent: 'center'}}>
+                <Text color="warmGray.50" p="2.5" borderRadius="full" bg="coolGray.800" fontSize="md"  mb={2}>
+                    {data.start.toDateString()}
+                </Text>
+                <Divider w="20"  />
+                <Text color="warmGray.50" p="2.5" borderRadius="full" bg="coolGray.800" fontSize="md"  mb={2}>
+                    {data.end.toDateString()}
+                </Text>
+            </HStack>
+       </Box> 
     )
 }
 

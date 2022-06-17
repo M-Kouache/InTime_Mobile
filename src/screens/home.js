@@ -1,11 +1,14 @@
 import axios from 'axios'
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import {LinearGradient} from 'expo-linear-gradient'
+import { EvilIcons, Ionicons } from '@expo/vector-icons'
+import { StatusBar } from 'expo-status-bar'
 import { useState, useEffect, useContext, useMemo } from 'react'
 import { useNavigation } from '@react-navigation/native'
 import { Calendar} from 'react-native-big-calendar'
 import { Agenda, AgendaList } from 'react-native-calendars'
 import { StyleSheet, SafeAreaView, View, ActivityIndicator, Alert } from 'react-native'
-import { Button, Modal, Badge, HStack, TextArea, Heading, useDisclose, Actionsheet, FormControl, Divider, Input, Icon, Spinner,Center, Fab, Box, Text } from 'native-base'
+import { Button, IconButton, Modal, Badge, HStack, TextArea, Heading, useDisclose, Actionsheet, FormControl, Divider, Input, Icon, Spinner,Center, Fab, Box, Text } from 'native-base'
 import AddEvent from './addEvent'
 import { UserContext, } from '../utils/contextProvider'
 import { getUser, } from '../utils/localStorage'
@@ -43,47 +46,23 @@ const Home = ()=> {
             eventData.map((event) => {
                 data.push({
                     id:event.body.id,
-                    allDay:true, 
+                    body:event.body,
+                    user:event.user_info,
+                    department:event.pub_info,
                     title: event.body.title,
                     start:new Date(event.body.date_start),
                     end:new Date(event.body.date_end),
                 })
             })
-            console.log(data)
             setEventItems(data)
         }
     }
 
-    const [calendarMode, setCalendarMode] = useState('day');
+    const [calendarMode, setCalendarMode] = useState('month');
+
+    const [calendarDate, setCalendarDate ] = useState(new Date())
 
     const [show, setShow] = useState({})
-
-    const eventNotes = useMemo(
-        () => (
-            <View style={{ marginTop: 3 }}>
-            <Text style={{ fontSize: 10, color: 'white' }}> Phone number: 555-123-4567 </Text>
-            <Text style={{ fontSize: 10, color: 'white' }}> Arrive 15 minutes early </Text>
-            </View>
-        ),
-        [],
-    )
-
-
-    const events = [
-        {
-            id:0,
-            title: 'Meeting',
-            start: '2022-06-07T01:00:00.000Z',
-            end: '2022-06-07T02:01:00.000Z',
-        },
-        {
-            id:1,
-            title: 'Coffee break',
-            start: '2022-06-07T07:07:00.000Z',
-            end: '2022-06-07T09:09:00.000Z',
-            children:eventNotes,
-        },
-    ]
 
     const renderCalendarMode = (mode)=> {
         setCalendarMode(mode);
@@ -91,67 +70,33 @@ const Home = ()=> {
 
     return (
         <SafeAreaView style={{height: '100%'}} onLayout={e => setShow({ layout: e.nativeEvent.layout })} >
-            {/* <HStack> 
-                <Button borderRadius={25} onPress={()=>{renderCalendarMode("day")}}>day</Button>
-                <Button borderRadius={25} onPress={()=>{renderCalendarMode("3days")}}>3days</Button>
-                <Button borderRadius={25} onPress={()=>{renderCalendarMode("week")}}>week</Button>
-                <Button borderRadius={25} onPress={()=>{renderCalendarMode("month")}}>month</Button>
-            </HStack>
-            */}
+            <StatusBar style="light" />
+            <LinearGradient colors={['rgba(46, 36, 31, 1)','rgba(46, 36, 31,0.7)','rgba(46, 36, 31,0.5)','rgba(46, 36, 31,0)']} style={{paddingBottom:22,paddingTop:40}} >
+                <HStack style={{marginLeft:11,marginRight:11,display:'flex',alignItems: 'center', justifyContent:'space-between'}}> 
+                    <IconButton onPress={()=> navigation.openDrawer()} p="1.5"  variant="solid" bg="rgba(46, 36, 31,0.3)" colorScheme="light" borderRadius="full" icon={<Icon as={EvilIcons} _dark={{
+                    color: "gray.400"
+                    }} size="7" name="navicon" color="warmGray.50" />} />
+                    <IconButton onPress={()=> setCalendarDate(new Date()) } p="2" variant="solid" bg="indigo.500" colorScheme="indigo" borderRadius="full" icon={<Icon as={Ionicons} size="6" name="today-outline" _dark={{
+                    color: "warmGray.50"
+                    }} color="warmGray.50" />} />
+                </HStack>
+            </LinearGradient>
             {show.layout ?  
                 <Calendar mode={calendarMode} ampm={true} 
                     events={eventItems} height={600} 
-                    onPressEvent={e => Alert.alert("massege","event clicked")} 
-                    headerComponentStyle={{
-                        width: '100%',
-                        display: 'flex',
-                        flexDirection: 'row',
-                        justifyContent: 'center',
+                    onPressEvent={e =>  navigation.navigate('EventDetails',{data:e})} 
+                    onPressCell = { e => {
+                        setCalendarDate(e)
+                        renderCalendarMode('day')
+                    } }
+                    date={calendarDate}
+                    headerContainerStyle={{
+                        paddingTop:0,
+                        height:"8%",
+                        backgroundColor:'rgba(0, 0, 0,0)'
                     }}
                 />
-
-            /*<Agenda   
-                items={
-                    eventItems
-                }
-                minDate={'2022-05-01'}
-                maxDate={'2024-05-30'}
-                pagingEnabled={false}
-                showClosingKnob={true}
-                pastScrollRange={1}
-                futureScrollRange={7}
-
-                rowHasChanged={(r1, r2) => {
-                    return r1.text !== r2.text;
-                }}
-
-                renderEmptyData={()=>{
-                    return (
-                        <Box w="100%" h="100%" justifyContent="center" alignItems="center">
-                            <Heading color="red.300">No Events For Today</Heading>
-                        </Box>
-                    )
-                }}
-
-                renderItem={(item, firstItemInDay) => {return (
-                   <Box bg="white" my={4} px={4} py={4} borderRadius={8} 
-                        onPress={() => console.log("Pressed")}     
-                   >
-                        <Heading fontSize="lg">
-                            {item.body.title}{" "} 
-                            <HStack w={295} px={2} justifyContent="space-between">
-                                <Text ml={2} fontSize="sm" color="gray.500" >Mr {item.user_info.first_name+' '+item.user_info.last_name} </Text>
-                                <Badge borderRadius={25} colorScheme="seccess" >{item.pub_info.libelle}</Badge>
-                            </HStack>
-                        </Heading>
-                        <Text pt="3" mb={2}>
-                            {item.body.description}
-                        </Text>
-                        <Button onPress={()=> navigation.navigate('EventDetails',{data:item})} size={"sm"} variant="outline" colorScheme="primary" w={100}>Read More</Button>
-                    </Box> 
-                );}}
-                style={{alignContent: "space-between"}}
-            />*/ : <Center h="100%"> <Spinner size="lg" /> </Center>}
+            : <Center h="100%"> <Spinner size="lg" /> </Center>}
         
         <StaggerComponent calendar_mode={renderCalendarMode} />
     </SafeAreaView>

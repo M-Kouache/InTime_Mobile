@@ -1,11 +1,11 @@
 import { useState, useEffect, useContext} from 'react'
-import { Center, ScrollView, Spinner, Heading, Input, Box, Text, VStack, FormControl, Button, Link, HStack} from 'native-base'
+import { Center, CheckIcon, Select, ScrollView, Spinner, Heading, Input, Box, Text, VStack, FormControl, Button, Link, HStack} from 'native-base'
 import { Alert } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 import { catchError } from '../utils/errorHandling'
 import { RegisterUser } from '../utils/userRegister';
 import { LogUser } from '../utils/userLogin'
-import { storeUser, getUser} from '../utils/localStorage'
+import { storeUser, setUser, getUser} from '../utils/localStorage'
 
 const Signup = () => {
 
@@ -18,7 +18,7 @@ const Signup = () => {
     const [httpStatus, setStatus] = useState('')
 
     const [Loading,setLoading] = useState(false)
-
+  
     const validate = () => {
       if (form.username === undefined) {
         setErrors({ ...errors,
@@ -49,6 +49,7 @@ const Signup = () => {
         }
       }
     }
+
 
   return (<>
   {Loading ? <Center flex={1}><Spinner color="indigo.500" size="lg" /></Center> :  

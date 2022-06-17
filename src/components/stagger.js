@@ -1,5 +1,6 @@
 import React from 'react'
-import { useDisclose, Box, Stagger, Center, IconButton, HStack, Icon, MaterialIcons, MaterialCommunityIcons} from 'native-base'
+import { MaterialCommunityIcons, MaterialIcons, AntDesign  } from '@expo/vector-icons'
+import { useDisclose, Box, Stagger, Center, IconButton, HStack, Icon } from 'native-base'
 import { Alert } from 'react-native'
 
 export default function StaggerComponent({calendar_mode}) {
@@ -41,16 +42,16 @@ export default function StaggerComponent({calendar_mode}) {
                 }
             }
       }}>
-          <IconButton onPress={()=> calendar_mode("month")} mb="4" variant="solid" bg="indigo.500" colorScheme="indigo" borderRadius="full" icon={<Icon as={MaterialIcons} size="6" name="location-pin" _dark={{
+          <IconButton onPress={()=> calendar_mode("month")} mb="4" variant="solid" bg="indigo.500" colorScheme="indigo" borderRadius="full" icon={<Icon as={AntDesign} size="6" name="calendar" _dark={{
           color: "warmGray.50"
         }} color="warmGray.50" />} />
           <IconButton  onPress={()=> calendar_mode("week")} mb="4" variant="solid" bg="yellow.400" colorScheme="yellow" borderRadius="full" icon={<Icon as={MaterialCommunityIcons} _dark={{
           color: "warmGray.50"
-        }} size="6" name="microphone" color="warmGray.50" />} />
-          <IconButton onPress={()=> calendar_mode("3days")} mb="4" variant="solid" bg="teal.400" colorScheme="teal" borderRadius="full" icon={<Icon as={MaterialCommunityIcons} _dark={{
+        }} size="6" name="calendar-week-begin" color="warmGray.50" />} />
+          <IconButton onPress={()=> calendar_mode("3days")} mb="4" variant="solid" bg="teal.400" colorScheme="teal" borderRadius="full" icon={<Icon as={MaterialIcons} _dark={{
           color: "warmGray.50"
-        }} size="6" name="video" color="warmGray.50" />} />
-          <IconButton onPress={()=> calendar_mode("day")} mb="4" variant="solid" bg="red.500" colorScheme="red" borderRadius="full" icon={<Icon as={MaterialIcons} size="6" name="photo-library" _dark={{
+        }} size="6" name="view-week" color="warmGray.50" />} />
+          <IconButton onPress={()=> calendar_mode("day")} mb="4" variant="solid" bg="red.500" colorScheme="red" borderRadius="full" icon={<Icon as={MaterialCommunityIcons} size="6" name="view-day-outline" _dark={{
           color: "warmGray.50"
         }} color="warmGray.50" />} />
         </Stagger>

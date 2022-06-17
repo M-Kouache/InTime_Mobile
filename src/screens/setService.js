@@ -2,7 +2,7 @@ import { useState, useEffect, useContext} from 'react'
 import { Center, Spinner, Heading, Input, Box, Text, VStack, Select, CheckIcon, FormControl, Button, Link, HStack} from 'native-base'
 import { UserContext } from '../utils/contextProvider'
 import { useNavigation } from '@react-navigation/native'
-import { RegisterUserProfile, getUserService } from '../utils/userRegister';
+import { RegisterUserProfile, PutUserProfile, getUserService } from '../utils/userRegister';
 import { setUser, getUser} from '../utils/localStorage'
 
 
@@ -19,7 +19,6 @@ const SetService = ({navigation}) => {
     const [selecteValue, setSelecteValue] = useState({})
 
     useEffect(() => {
-        console.log('setService useEffect')
         if (user === null){getUser().then(usr => {
             setUser(usr)
         })}
@@ -41,7 +40,9 @@ const SetService = ({navigation}) => {
             if (user != null) {
                 getUserService(user.access).then((response) => {
                     setSelecteValue(response.data)
-                    setLoading(false)
+                    PutUserProfile(form,user.access).then(() => {
+                        setLoading(false)
+                    })
                 })
             }
         } catch (error) {
@@ -55,7 +56,7 @@ const SetService = ({navigation}) => {
           setLoading(true)
         try {
             if (user != null){
-                const response = await RegisterUserProfile(form,user.access)
+                const response = await PutUserProfile(form,user.access)
                 setLoading(false)
                 if (response.status === 200) navigation.replace('DrawerNav')
             }
