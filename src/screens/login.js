@@ -9,7 +9,7 @@ import { storeUser, getUser } from '../utils/localStorage'
 
 const Login = () => {
     
-    const {user, setUser, setAuthorized} = useContext(UserContext)
+    const {setUser, setAuthorized} = useContext(UserContext)
 
     const navigation = useNavigation()
 
