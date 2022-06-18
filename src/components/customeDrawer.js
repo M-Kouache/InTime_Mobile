@@ -2,7 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import { useEffect, useState } from 'react'
 import { DrawerContentScrollView, DrawerItemList } from '@react-navigation/drawer'
 import { Ionicons } from '@expo/vector-icons'
-import { Box, Text, Icon, IconButton, Pressable, VStack, ScrollView, Center, Button, HStack, useColorModeValue,} from 'native-base'
+import { Box, Text, Spinner, Icon, IconButton,VStack, ScrollView, Button, HStack, useColorModeValue,} from 'native-base'
 import { StyleSheet, Alert } from 'react-native'
 import { UserContext } from '../utils/contextProvider'
 import { useContext } from 'react'
@@ -18,6 +18,8 @@ const CustomeDrawer = (props)=> {
 
     const [isAdmin, setisAdmin] = useState(false)
 
+    const [spinner, setSpinner ] = useState(false)
+
     useEffect(() => {
         if (userData != null){
             setData(userData)
@@ -25,6 +27,7 @@ const CustomeDrawer = (props)=> {
     },[userData])
 
     const clearLocalStorage = async () => {
+        setSpinner(true)
         try {
             await AsyncStorage.clear()
             getUser().then(user => {
@@ -56,13 +59,16 @@ const CustomeDrawer = (props)=> {
             </DrawerContentScrollView>
             <Box w="100%" h="55%" paddingBottom="5" px={4}>
             </Box>
-            <HStack style={{paddingLeft:30, paddingBottom:30}}>
-                <Pressable onPress={clearLocalStorage}  w="55%" style={{display:'flex',alignItems:'center',flexDirection: 'row',}} >
-                    <Icon color={useColorModeValue("coolGray.800","warmGray.50")} as={Ionicons} size="6" name="md-log-out-outline" _dark={{
-                    color: "warmGray.50"
-                    }} /> 
-                    <Text  ml="3" fontSize="lg" fontWeight="bold" color={useColorModeValue("coolGray.800","warmGray.50")} >Sign Out</Text>
-                </Pressable>
+            <HStack style={{paddingLeft:20, paddingBottom:30}}>
+                <Button onPress={ clearLocalStorage } w="80%"  variant="outline" borderRadius={12} borderWidth={.5} borderColor="primary.500" >
+                    <HStack>
+                        <Icon color={useColorModeValue("coolGray.800","warmGray.50")} as={Ionicons} size="6" name="md-log-out-outline" _dark={{
+                        color: "warmGray.50"
+                        }} /> 
+                        <Text  ml="3" fontSize="lg" fontWeight="bold" color={useColorModeValue("coolGray.800","warmGray.50")} >Sign Out</Text>
+                        { spinner ? <Spinner ml={4} color={useColorModeValue("coolGray.800","warmGray.50")} /> : null}
+                    </HStack>
+               </Button>
             </HStack>
         </Box>
     )
