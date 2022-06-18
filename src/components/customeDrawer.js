@@ -22,7 +22,7 @@ const CustomeDrawer = (props)=> {
         if (userData != null){
             setData(userData)
         }
-    },[])
+    },[userData])
 
     const clearLocalStorage = async () => {
         try {
