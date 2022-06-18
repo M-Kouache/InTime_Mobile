@@ -6,12 +6,9 @@ import { StatusBar } from 'expo-status-bar'
 import { useState, useEffect, useContext, useMemo } from 'react'
 import { useNavigation } from '@react-navigation/native'
 import { Calendar} from 'react-native-big-calendar'
-import { Agenda, AgendaList } from 'react-native-calendars'
 import { StyleSheet, SafeAreaView, View, ActivityIndicator, Alert } from 'react-native'
 import { Button, IconButton, Modal, Badge, HStack, TextArea, Heading, useDisclose, Actionsheet, FormControl, Divider, Input, Icon, Spinner,Center, Fab, Box, Text } from 'native-base'
-import AddEvent from './addEvent'
 import { UserContext, } from '../utils/contextProvider'
-import { getUser, } from '../utils/localStorage'
 import StaggerComponent from '../components/stagger'
 
 
